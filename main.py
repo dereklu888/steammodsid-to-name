@@ -110,7 +110,15 @@ def games_loop(path: str) -> dict:
         games['games'] = gamesList
         
         return games
+"""
+This function initializes the argument parser.
 
+Input
+    void - None
+
+Output
+    (argparse.ArgumentParser) - argument parser for this program
+"""
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage = "%(prog)s [OPTION] [FILE]",
@@ -129,10 +137,20 @@ def init_argparse() -> argparse.ArgumentParser:
 
     return parser
 
+"""
+This function validates a path, checking if it exists and ensuring that the path has a trailing slash.
+
+Input
+    path (str) - path to be checked
+
+Output
+    (str) - the validated path if the path is valid, or None if the path is invalid
+"""
 def validate_path(path : str) -> str:
     if os.path.exists(path):
         path = os.path.join(path, '') #ensure path name has trailing slash
         return path
+    print(f'ERROR: Invalid Path {path}')
     return None
 
 if __name__ == '__main__':
@@ -157,7 +175,10 @@ if __name__ == '__main__':
     elif(args.mod_id):
         output = mod_lookup(args.mod_id)
     else:
-        output = games_loop('C:/Program Files (x86)/Steam/steamapps/workshop/content/')
+        # if no path specified, do a games loop over the default path
+        path = validate_path('C:/Program Files (x86)/Steam/steamapps/workshop/content/')
+        if (path):
+            output = games_loop(path)
     
     if(args.output_file):
         with open(args.output_file, 'w') as f:
